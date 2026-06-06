@@ -14,6 +14,14 @@ export const mockDashboardData = {
     ]
   },
   
+  // GET /reports/summary
+  reportsSummary: {
+    totalSpend: 1240000,
+    activeVendors: 28,
+    poFulfillment: 94,
+    overdueInvoices: 3
+  },
+  
   // GET /reports/monthly-trend
   spendingTrend: [
     { month: 'Jan', amount: 84000 },
@@ -33,6 +41,14 @@ export const mockDashboardData = {
     { name: 'Global Logistics', compliance: 90, delivery: 92, quality: 88 }
   ],
 
+  // GET /reports/spending-distribution (Pie Chart)
+  spendingDistribution: [
+    { name: 'Raw Materials', value: 540000 },
+    { name: 'IT Solutions', value: 380000 },
+    { name: 'Heavy Equipment', value: 210000 },
+    { name: 'Logistics', value: 110000 }
+  ],
+  
   // GET /rfqs
   recentRfqs: [
     { id: 1, title: 'Raw Steel Sheet Coils', category: 'Raw Materials', description: 'Grade A coils', deadline: '2026-06-15', submissions: 3, status: 'Active' },

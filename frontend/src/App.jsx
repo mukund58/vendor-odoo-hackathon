@@ -13,6 +13,8 @@ import Reports from './pages/Reports';
 import ActivityLogs from './pages/ActivityLogs';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Profile from './pages/Profile';
+import VendorSettings from './pages/VendorSettings';
 
 function App() {
   return (
@@ -76,6 +78,16 @@ function App() {
             <Route path="activity" element={
               <ProtectedRoute allowedRoles={['ADMIN']}>
                 <ActivityLogs />
+              </ProtectedRoute>
+            } />
+            <Route path="profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } />
+            <Route path="vendor-settings" element={
+              <ProtectedRoute>
+                <VendorSettings />
               </ProtectedRoute>
             } />
             

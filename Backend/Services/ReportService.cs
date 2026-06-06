@@ -86,25 +86,31 @@ public class ReportService : IReportService
 
     public async Task<IEnumerable<MonthlyTrendDto>> GetMonthlyTrendAsync(DateTime? startDate, DateTime? endDate)
     {
-        // Generate trend list for the last 6 months dynamically
         var trend = new List<MonthlyTrendDto>();
-        var currentDate = DateTime.UtcNow;
+        
+        // Default to last 6 months if range not specified
+        var start = startDate ?? DateTime.UtcNow.AddMonths(-5);
+        var end = endDate ?? DateTime.UtcNow;
 
-        for (int i = 5; i >= 0; i--)
+        var startMonth = new DateTime(start.Year, start.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+        var endMonth = new DateTime(end.Year, end.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        int monthsCount = ((endMonth.Year - startMonth.Year) * 12) + endMonth.Month - startMonth.Month + 1;
+        if (monthsCount <= 0) monthsCount = 1;
+        if (monthsCount > 36) monthsCount = 36; // Limit to 3 years max
+
+        for (int i = 0; i < monthsCount; i++)
         {
-            var targetMonth = currentDate.AddMonths(-i);
+            var targetMonth = startMonth.AddMonths(i);
             var year = targetMonth.Year;
             var month = targetMonth.Month;
             
             var monthStart = new DateTime(year, month, 1, 0, 0, 0, DateTimeKind.Utc);
             var monthEnd = monthStart.AddMonths(1).AddTicks(-1);
 
-            // Sum spend in month
             var monthlySpend = await _context.Invoices
                 .Where(inv => inv.Status != InvoiceStatus.DRAFT && inv.CreatedAt >= monthStart && inv.CreatedAt <= monthEnd)
                 .SumAsync(inv => inv.TotalAmount);
-
-            // Seeding will provide real monthly values for empty DBs
 
             trend.Add(new MonthlyTrendDto
             {

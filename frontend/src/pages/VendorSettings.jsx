@@ -23,7 +23,10 @@ const initialSettings = {
 };
 
 const VendorSettings = () => {
-  const [settings, setSettings] = useState({ ...initialSettings });
+  const [settings, setSettings] = useState(() => {
+    const saved = localStorage.getItem('vb_vendor_settings');
+    return saved ? JSON.parse(saved) : { ...initialSettings };
+  });
   
   // Notification Toast states
   const [toastMessage, setToastMessage] = useState('');
@@ -40,22 +43,14 @@ const VendorSettings = () => {
   const handleSaveSettings = (e) => {
     e.preventDefault();
 
-    // Simulate backend API PUT /vendors/settings payload log
-    console.log('Axios PUT /vendors/settings requested with payload:', {
-      companyName: settings.companyName,
-      gstNumber: settings.gstNumber,
-      email: settings.email,
-      phone: settings.phone,
-      address: settings.address,
-      category: settings.category,
-      status: settings.status
-    });
+    localStorage.setItem('vb_vendor_settings', JSON.stringify(settings));
 
-    triggerToast('Company settings successfully updated and saved in backend.');
+    triggerToast('Company settings successfully updated and saved.');
   };
 
   const handleReset = () => {
     setSettings({ ...initialSettings });
+    localStorage.setItem('vb_vendor_settings', JSON.stringify(initialSettings));
     triggerToast('Settings restored to initial values.');
   };
 
